@@ -12,9 +12,7 @@ const password = process.env.pass;
 mongoose.set("strictQuery", true); // This line is added to remove DeprecationWarning
 //connecting to database
 const main = async () => {
-  await mongoose.connect(
-    `mongodb+srv://${user}:${password}@cluster1.bdobp9b.mongodb.net/?retryWrites=true&w=majority/test`
-  );
+  await mongoose.connect(process.env.base_url);
 };
 main();
 
