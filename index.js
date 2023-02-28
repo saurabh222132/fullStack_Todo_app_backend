@@ -5,14 +5,12 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
 
-const port = process.env.port || 30001;
-const user = process.env.user;
-const password = process.env.pass;
+const port = process.env.port || 3001;
 
 mongoose.set("strictQuery", true); // This line is added to remove DeprecationWarning
 //connecting to database
 const main = async () => {
-  await mongoose.connect(process.env.base_url);
+  await mongoose.connect(`${process.env.base_url}`);
 };
 main();
 
@@ -29,14 +27,14 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // post request:  recieving the post request from the client side to store the todo in database
-app.post("/", (req, res) => {
+app.post(`/`, (req, res) => {
   //create new todo to save in database
   const newTodo = new Todo({
     todo: req.body.todo,
   });
-  newTodo
-    .save()
-    .then(() => console.log("newTodo saved in database successfully!"));
+  newTodo.save();
+
+  // .then(() => console.log("newTodo saved in database successfully!"));
 });
 
 // onload request : send the stored taks to the client
@@ -53,10 +51,14 @@ app.get(`/onload`, (req, res) => {
 // delete the toto
 app.post(`/delete`, (req, res) => {
   Todo.deleteOne({ todo: req.body.forDeletetodo }, (err, result) => {
-    console.log("todo deleted from database successfully!");
+    // console.log("todo deleted from database successfully!");
   });
 
   res.send("todo deleted");
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello from the server.");
 });
 
 app.listen(port, () => {
